@@ -174,7 +174,7 @@ git add screenshots/
 
 ### Commit realizado
 ```bash
-git commit -m "Implementación completa: Actualizar tareas con pruebas y documentación"
+git commit -m "[Jperez] Implementación completa: Actualizar tareas con pruebas y documentación"
 ```
 
 ### Push a remoto
