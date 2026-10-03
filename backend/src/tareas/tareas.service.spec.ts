@@ -12,7 +12,7 @@ describe('TareasService', () => {
     const module = await Test.createTestingModule({
       providers: [
         TareasService,
-        { provide: DatabaseService, useValue: { query } },
+        { provide: DatabaseService, useValue: { query } as any },
       ],
     }).compile();
 
@@ -21,7 +21,7 @@ describe('TareasService', () => {
 
   it('devuelve las filas de la consulta al listar', async () => {
     const tareas = [{ id: 1, titulo: 'Leer la guía de la clase 2' }];
-    query.mockResolvedValue({ rows: tareas });
+    query.mockResolvedValue({ rows: tareas } as any);
 
     await expect(service.listar()).resolves.toEqual(tareas);
     expect(query).toHaveBeenCalledWith(
@@ -31,12 +31,23 @@ describe('TareasService', () => {
 
   it('inserta el título y devuelve la fila creada', async () => {
     const creada = { id: 2, titulo: 'Nueva tarea' };
-    query.mockResolvedValue({ rows: [creada] });
+    query.mockResolvedValue({ rows: [creada] } as any);
 
     await expect(service.crear('Nueva tarea')).resolves.toEqual(creada);
     expect(query).toHaveBeenCalledWith(
       'INSERT INTO tareas (titulo) VALUES ($1) RETURNING id, titulo',
       ['Nueva tarea'],
+    );
+  });
+
+  it('actualiza el título y devuelve la fila actualizada', async () => {
+    const actualizada = { id: 1, titulo: 'Tarea actualizada' };
+    query.mockResolvedValue({ rows: [actualizada] } as any);
+
+    await expect(service.actualizar(1, 'Tarea actualizada')).resolves.toEqual(actualizada);
+    expect(query).toHaveBeenCalledWith(
+      'UPDATE tareas SET titulo = $1 WHERE id = $2 RETURNING id, titulo',
+      ['Tarea actualizada', 1],
     );
   });
 });
