@@ -74,4 +74,26 @@ describe('Tareas (integration)', () => {
 
     expect(response.status).toBe(404);
   });
+
+  it('DELETE /tareas/:id devuelve 200 con la tarea eliminada', async () => {
+    const eliminada = { id: 1, titulo: 'Tarea 1' };
+    query.mockResolvedValue({ rows: [eliminada] });
+
+    const response = await request(app.getHttpServer()).delete('/tareas/1');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(eliminada);
+    expect(query).toHaveBeenCalledWith(
+      'DELETE FROM tareas WHERE id = $1 RETURNING id, titulo',
+      [1],
+    );
+  });
+
+  it('DELETE /tareas/:id devuelve 404 si la tarea no existe', async () => {
+    query.mockResolvedValue({ rows: [] });
+
+    const response = await request(app.getHttpServer()).delete('/tareas/999');
+
+    expect(response.status).toBe(404);
+  });
 });
