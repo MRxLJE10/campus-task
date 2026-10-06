@@ -2,7 +2,7 @@
 
 ## Datos
 - **Personas:** Juan Sebastian Perez 2459371 Mariana Rios 2459759 Victor Murillo 2459569
-- **Fecha:** 3 de octubre de 2026
+- **Fecha:** 6 de octubre de 2026
 - **Rama:** taller/actualizar-eliminar-tareas
 
 ---
