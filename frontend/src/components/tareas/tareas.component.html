@@ -7,7 +7,7 @@
 
   <div>
     <input type="text" #tituloInput />
-    <button (click)="crear(tituloInput.value)">Agregar</button>
+    <button class="agregar" (click)="crear(tituloInput.value)">Agregar</button>
   </div>
   <ul>
     @for (tarea of tareas(); track tarea.id) {

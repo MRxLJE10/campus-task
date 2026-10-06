@@ -11,12 +11,10 @@
   margin: 0 auto;
   padding: 2.25rem 2rem 2rem 3.25rem;
   background:
-    repeating-linear-gradient(
-      to bottom,
+    repeating-linear-gradient(to bottom,
       transparent,
       transparent 31px,
-      rgba(61, 90, 69, 0.08) 32px
-    ),
+      rgba(61, 90, 69, 0.08) 32px),
     #fffaf3;
   border: 1px solid rgba(49, 38, 27, 0.12);
   border-radius: 1.25rem;
@@ -31,8 +29,7 @@
   inset: 0.85rem auto 0.85rem 1.15rem;
   width: 0.7rem;
   background:
-    radial-gradient(circle at center, #f3ece2 0 0.28rem, transparent 0.3rem)
-      0 0.35rem / 0.7rem 2rem;
+    radial-gradient(circle at center, #f3ece2 0 0.28rem, transparent 0.3rem) 0 0.35rem / 0.7rem 2rem;
   opacity: 0.95;
 }
 
@@ -108,6 +105,61 @@ li:last-child {
   font-size: 1.05rem;
   line-height: 1.45;
 }
+
+.eliminar {
+  padding: 0.2rem 1.0rem;
+  font-size: 0.7rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #c42626;
+  width: 80px;
+  height: 20px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.editar {
+  padding: 0.2rem 1.0rem;
+  font-size: 0.7rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #42a34d;
+  width: 80px;
+  height: 20px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.agregar {
+  padding: 0.2rem 0.8rem;
+  font-size: 0.85rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #3da5c7;
+  width: 90px;
+  height: 23px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.guardar {
+  padding: 0.2rem 1.0rem;
+  font-size: 0.7rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #ffd65b;
+  width: 80px;
+  height: 20px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+
+
 
 @media (max-width: 640px) {
   :host {

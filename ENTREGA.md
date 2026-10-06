@@ -459,3 +459,73 @@ git push
 |---|---|---|
 | backend | `npm test` | 10 pruebas pasando |
 | frontend | `npm test` | 4 specs, 0 failures |
+
+---
+
+# Mejoras en la UI
+
+Se hacen unas mejoras en los 4 botones Editar,eliminar,agregar y guardar
+
+![BD después de editar y eliminar](./screenshots/frontend-mejorado.png)
+
+**NOTA:** se agrego una clase al contenedor del boton de agregar  para poder llamarlo en css
+
+```html
+ <button class="agregar" (click)="crear(tituloInput.value)">Agregar</button>
+```
+
+
+
+```css
+.eliminar {
+  padding: 0.2rem 1.0rem;
+  font-size: 0.7rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #c42626;
+  width: 80px;
+  height: 20px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.editar {
+  padding: 0.2rem 1.0rem;
+  font-size: 0.7rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #42a34d;
+  width: 80px;
+  height: 20px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.agregar {
+  padding: 0.2rem 0.8rem;
+  font-size: 0.85rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #3da5c7;
+  width: 90px;
+  height: 23px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.guardar {
+  padding: 0.2rem 1.0rem;
+  font-size: 0.7rem;
+  font-family: Fraunces, Georgia, serif;
+  color: #fffaf3;
+  background: #ffd65b;
+  width: 80px;
+  height: 20px;
+  border-radius: 4.5rem;
+  cursor: pointer;
+  border: none;
+}
+```
