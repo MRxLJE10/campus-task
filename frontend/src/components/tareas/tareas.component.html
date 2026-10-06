@@ -14,7 +14,14 @@
 
     <li>
       <span class="numero">{{ tarea.id }}</span>
+      @if (editandoId() === tarea.id) {
+      <input type="text" class="edicion" #edicionInput [value]="tarea.titulo" />
+      <button class="guardar" (click)="actualizar(tarea.id, edicionInput.value)">Guardar</button>
+      } @else {
       <span class="titulo">{{ tarea.titulo }}</span>
+      <button class="editar" (click)="editar(tarea.id)">Editar</button>
+      }
+      <button class="eliminar" (click)="eliminar(tarea.id)">Eliminar</button>
     </li>
     }
   </ul>

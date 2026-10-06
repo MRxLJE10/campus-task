@@ -317,3 +317,145 @@ git commit -m "Agrega eliminar tarea: servicio, ruta DELETE /tareas/:id y prueba
 git push -u origin taller/eliminar- 202459569
 ```
 **Nota:** El archivo `.env` no se incluyó en los commits (está en `.gitignore`)
+
+
+----
+
+## Implementacion Frontend 
+
+Se agregan dos metodos ya creados anteriormente:
+
+### Servicio (frontend/src/components/tareas/tareas.service.ts)
+
+
+```typescript
+actualizar(id: number, titulo: string): Observable<Tarea> {
+  return this.http.patch<Tarea>(`${this.apiUrl}/tareas/${id}`, { titulo });
+}
+eliminar(id: number): Observable<Tarea> {
+  return this.http.delete<Tarea>(`${this.apiUrl}/tareas/${id}`);
+}
+```
+---
+
+### Componente (frontend/src/components/tareas/tareas.component.ts)
+
+```typescript
+editandoId = signal<number | null>(null);
+  editar(id: number) {
+    this.editandoId.set(id);
+  }
+  actualizar(id: number, titulo: string) {
+    this.tareasService.actualizar(id, titulo).subscribe((tarea) => {
+      this.tareas.update((tareas) => tareas.map((t) => (t.id === id ? tarea : t)));
+      this.editandoId.set(null);
+    });
+  }
+  eliminar(id: number) {
+    this.tareasService.eliminar(id).subscribe(() => {
+      this.tareas.update((tareas) => tareas.filter((t) => t.id !== id));
+    });
+  }
+```
+---
+
+### Html (frontend/src/components/tareas/tareas.component.html)
+
+```html
+@if (editandoId() === tarea.id) {
+  <input type="text" class="edicion" #edicionInput [value]="tarea.titulo" />
+  <button class="guardar" (click)="actualizar(tarea.id, edicionInput.value)">Guardar</button>
+} @else {
+  <span class="titulo">{{ tarea.titulo }}</span>
+  <button class="editar" (click)="editar(tarea.id)">Editar</button>
+}
+<button class="eliminar" (click)="eliminar(tarea.id)">Eliminar</button>
+```
+---
+
+**NOTAS**
+- `editandoId` guarda solo el id de la tarea que se está editando (o `null`). Con eso cada tarea decide si muestra el texto o un campo para escribir.
+- La lista local cambia solo después de que el backend responde, para que la pantalla nunca muestre algo que la base de datos no tiene.
+- `map` reemplaza solo la tarea editada y `filter` quita solo la eliminada.
+- `@if` y `@else` es la sintaxis actual de Angular, la misma familia que el `@for` que ya traía desde el repositorio original y/o plantilla.
+
+---
+
+### Pruebas - Frontend (tareas.component.spec.ts)
+
+Siguen el patrón de las pruebas del repositorio (preparar, ejecutar, verificar). El servicio se reemplaza por un spy de Jasmine, que es un servicio falso: así las pruebas no dependen del backend.
+
+- **Editar:** (preparar) el spy de `actualizar` devuelve la tarea con el título nuevo. (ejecutar) clic en Editar, se escribe en el campo y clic en Guardar. (verificar) `actualizar` se llamó con `(1, 'Guía editada')` y la pantalla muestra el título nuevo.
+- **Eliminar:** (preparar) la lista tiene 2 tareas y el spy de `eliminar` devuelve la tarea borrada. (ejecutar) clic en Eliminar. (verificar) `eliminar` se llamó con `1` y en pantalla solo queda la otra tarea.
+
+### **npm test Frontend**
+![npm test frontend](./screenshots/frontend-npm-test.png)
+- Specs: 4, failures: 0 (2 del repositorio y 2 nuevas).
+
+---
+
+## Pruebas Manuales E2E (Frontend en http://localhost:4200)
+
+Con el backend en `http://localhost:3000` y el frontend en `http://localhost:4200`.
+
+### Lista inicial
+![Lista inicial](./screenshots/frontend-lista-inicial.png)
+
+### Editar una tarea
+Clic en **Editar** en la Tarea 1, se cambia el texto y clic en **Guardar**.
+
+![Editando](./screenshots/frontend-editando.png)
+
+Después de refrescar la página (F5), el título nuevo sigue ahí:
+
+![Tarea editada](./screenshots/frontend-editar-guardado.png)
+
+### Eliminar una tarea
+Clic en **Eliminar** en la Tarea 3. Después de refrescar, las otras dos siguen:
+
+![Tarea eliminada](./screenshots/frontend-eliminar.png)
+
+### Base de datos verificada
+Comando:
+```bash
+psql -U postgres -h localhost -d campus_tasks -c "SELECT * FROM tareas;"
+```
+![BD después de editar y eliminar](./screenshots/frontend-bd.png)
+
+---
+
+## Git (Frontend)
+
+```bash
+git checkout -b taller/frontend-202459759
+git add ENTREGA.md
+git add frontend/src/components/tareas
+git add screenshots/frontend-bd.png
+git add screenshots/frontend-editando.png
+git add screenshots/frontend-editar-guardado.png
+git add screenshots/frontend-eliminar.png
+git add screenshots/frontend-lista-inicial.png
+git add screenshots/frontend-npm-test.png
+git commit -m "feat: Se Agrega el Frontend de editar y eliminar con pruebas y documentacion"
+git push -u origin taller/frontend-202459759
+```
+El archivo `.env` no se incluyó en los commits (está en `.gitignore`).
+
+## Integración final
+
+La rama del frontend se creó después de unir las ramas del backend, así que contiene la integración final en `master`:
+
+**Nota:** Intergrado con pull request en github
+
+```bash
+git checkout master
+git pull
+git merge taller/frontend-202459759
+git push
+```
+
+### Resultados finales
+| Carpeta | Comando | Resultado |
+|---|---|---|
+| backend | `npm test` | 10 pruebas pasando |
+| frontend | `npm test` | 4 specs, 0 failures |
