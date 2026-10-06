@@ -182,4 +182,138 @@ git commit -m "[Jperez] Implementación completa: Actualizar tareas con pruebas 
 git push -u origin taller/actualizar-eliminar-tareas-2459371
 ```
 
+---
+
+## Implementación: Eliminar
+
+### Servicio (backend/src/tareas/tareas.service.ts)
+
+Se agrega el método `eliminar()`:
+
+```typescript
+async eliminar(id: number): Promise<Tarea> {
+  const result = await this.db.query(
+    'DELETE FROM tareas WHERE id = $1 RETURNING id, titulo',
+    [id],
+  );
+  return result.rows[0] as Tarea;
+}
+```
+
+SQL: `DELETE FROM tareas WHERE id = $1 RETURNING id, titulo` (consulta parametrizada).
+
+### Controlador (backend/src/tareas/tareas.controller.ts)
+
+Se agrega ruta DELETE:
+
+```typescript
+@Delete(':id')
+async eliminar(@Param('id') id: string): Promise<Tarea> {
+  const tarea = await this.tareasService.eliminar(Number(id));
+  if (!tarea) {
+    throw new HttpException('Tarea no encontrada', 404);
+  }
+  return tarea;
+}
+```
+
+**Decisiones:**
+- Conversión de id: `Number(id)` convierte string a number, igual que en PATCH
+- Detección de 404: si la consulta no devuelve filas, `rows[0]` es `undefined` y `if (!tarea)` lanza 404
+
+### Pruebas - Backend
+
+#### Unitarias (tareas.service.spec.ts)
+- Elimina la tarea por id y devuelve la fila eliminada
+
+Verifica:
+- `query` se llama con DELETE y parámetro [id]
+- Devuelve la tarea eliminada
+
+#### Integración (tareas.integration.spec.ts)
+- DELETE /tareas/:id devuelve 200 con la tarea eliminada
+- DELETE /tareas/:id devuelve 404 si la tarea no existe
+
+Verifica:
+- Caso 200: DELETE a id existente responde 200 con tarea
+- Caso 404: DELETE a id inexistente responde 404
+
+### Prueba manual
+- DELETE http://localhost:3000/tareas/4 → 200 OK
+- BD cambió correctamente
+- DELETE a id 999 → 404 Not Found
+
+---
+
+## Pruebas - Resultado (Eliminar)
+### npm test Backend
+![npm test backend eliminar](./screenshots/eliminar_npmTest.png)
+- Test Suites: 2 passed, 2 total
+- Tests: 10 passed, 10 total
+- Todas las pruebas pasan: 4 unitarias (listar, crear, actualizar, eliminar) + 6 integración.
+
+---
+## Pruebas Manuales E2E (Eliminar)
+
+### DELETE Exitoso - Eliminar tarea
+
+![DELETE eliminar tarea](./screenshots/delete-exito-200.png)
+
+Comando:
+```bash
+curl -i -X DELETE http://localhost:3000/tareas/4
+```
+
+Respuesta: `HTTP/1.1 200 OK` con `{"id":4,"titulo":"para borrar"}`
+
+### BD Verificada
+
+![BD después de eliminar](./screenshots/bd-eliminada.png)
+
+Comando (pgAdmin, Query Tool):
+```sql
+SELECT * FROM tareas;
+```
+
+Resultado: la tarea "para borrar" ya no aparece en la tabla
+
+### DELETE 404 - Tarea no existe
+
+![DELETE tarea inexistente](./screenshots/delete-404.png)
+
+Comando:
+```bash
+curl -i -X DELETE http://localhost:3000/tareas/999
+```
+
+Respuesta: `HTTP/1.1 404 Not Found` con `{"statusCode":404,"message":"Tarea no encontrada"}`
+
+---
+
+## Git (Eliminar)
+
+### Rama creada
+```bash
+git checkout -b taller/eliminar-202459569
+```
+
+### Cambios agregados al staging
+```bash
+git add backend/src/tareas/tareas.service.ts
+git add backend/src/tareas/tareas.controller.ts
+git add backend/src/tareas/tareas.service.spec.ts
+git add backend/src/tareas/tareas.integration.spec.ts
+git add ENTREGA.md
+git add screenshots/
+```
+
+### Commit realizado
+```bash
+git commit -m "Agrega eliminar tarea: servicio, ruta DELETE /tareas/:id y pruebas unitarias e integración"
+```
+
+### Push a remoto
+```bash
+git push -u origin taller/eliminar- 202459569
+```
 **Nota:** El archivo `.env` no se incluyó en los commits (está en `.gitignore`)
