@@ -10,9 +10,34 @@
 ## Trabajo
 
 ### PostgreSQL
-- Instalado: PostgreSQL 18.6
-- BD creada: `campus_tasks`
-- Tabla: `tareas (id SERIAL PRIMARY KEY, titulo TEXT NOT NULL)`
+
+#### Instalación
+- Descargado desde https://www.postgresql.org/download/
+- Versión instalada: PostgreSQL 18.6
+- Puerto: 5432
+
+#### Creación de Base de Datos y Tabla
+
+Dentro de psql:
+```bash
+psql -U postgres
+```
+
+Luego se ejecuto:
+```sql
+CREATE DATABASE campus_tasks;
+\c campus_tasks
+CREATE TABLE tareas (id SERIAL PRIMARY KEY, titulo TEXT NOT NULL);
+INSERT INTO tareas (titulo) VALUES ('Leer la guía de la clase 2');
+INSERT INTO tareas (titulo) VALUES ('Preparar el entorno de desarrollo');
+```
+
+Verificación:
+```sql
+SELECT * FROM tareas;
+```
+
+Resultado: 2 filas con los datos iniciales 
 
 ### Variables de entorno (.env)
 ```env
@@ -445,7 +470,7 @@ El archivo `.env` no se incluyó en los commits (está en `.gitignore`).
 
 La rama del frontend se creó después de unir las ramas del backend, así que contiene la integración final en `master`:
 
-**Nota:** Intergrado con pull request en github
+**Nota:** Integrado con pull request en github
 
 ```bash
 git checkout master
@@ -464,11 +489,11 @@ git push
 
 # Mejoras en la UI
 
-Se hacen unas mejoras en los 4 botones Editar,eliminar,agregar y guardar
+Se hacen unas mejoras en los 4 botones Editar, eliminar, agregar y guardar
 
 ![BD después de editar y eliminar](./screenshots/frontend-mejorado.png)
 
-**NOTA:** se agrego una clase al contenedor del boton de agregar  para poder llamarlo en css
+**NOTA:** se agrego una clase al contenedor del boton de agregar para poder llamarlo en css
 
 ```html
  <button class="agregar" (click)="crear(tituloInput.value)">Agregar</button>
